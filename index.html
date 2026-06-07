@@ -3,49 +3,170 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Churchland</title>
+    <title>Interactive Python on GH Pages</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Churchland</title>
+  <style>
+    body {
+      background: #111;
+      color: #e8d5a3;
+      font-family: monospace;
+      font-size: 16px;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    h1 { color: #c9973a; }
+    #output {
+      white-space: pre-wrap;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+    #input-row {
+      display: flex;
+      gap: 10px;
+    }
+    input[type="text"] {
+      background: #222;
+      border: 1px solid #c9973a;
+      color: #e8d5a3;
+      font-family: monospace;
+      font-size: 16px;
+      padding: 8px 12px;
+      flex: 1;
+      outline: none;
+    }
+    button {
+      background: transparent;
+      border: 1px solid #c9973a;
+      color: #c9973a;
+      font-family: monospace;
+      font-size: 15px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+    button:hover { background: #c9973a22; }
+    #prompt-text { color: #c9973a; margin-bottom: 6px; }
+  </style>
 </head>
 <body>
-    <py-script worker>
-print(r'''
-                                             +
-                                             A
-                                          __/_\__
-                                         /\-'o'-/\
-                                        _||:<_>:||_
-                                       /\_/=====\_/\
-                                      _|:_:_[I]_:_:|_
-                                   _/::::::::::::::::\_
-                                 _/::::::::::::::::::::\_
-                                /::::::::::::::::::::::::\
-''')
-print("Welcome to Churchland.")
-print("Your mission is to find a way to destroy the dragon!")
-direction = input("Type left or right to proceed: ").lower()
-if direction == "left":
-    print("You are about to enter the church!\n")
-    door = input("What door are you going through? Type backdoor or entrance door: ").lower()
-    if door == "entrance" or door == "entrance door":
-        print("You entered the church successfully! Now then...\n")
-        print("As a warrior, you have a myriad of weapons. Which one are you using?\n")
-        print("- Axe\n- Lightsaber\n- Chainsaw\n- Traditional sword")
-        weapon = input("Type wisely: ").lower()
-        if weapon == "axe":
-            print("You were burned by a spitball from the dragon! Game Over!")
-        elif weapon == "lightsaber":
-            print("You win the fight as a Jedi warrior! Congratulations!")
-        elif weapon == "sword" or weapon == "traditional sword":
-            print("You accidentally kill the held captive princess! Game Over!")
-        elif weapon == "chainsaw":
-            print("You were beaten to death by the dragon. Game Over!")
-        else:
-            print("You didn't choose any right weapon so you lose instantly. Game Over!")
-    else:
-        print("You were eaten by the dragon! Game Over!")
-else:
-    print("You fall into a hole. Game Over!")
-    </py-script>
+    <script type="py" async>
+    </script>
+<h1>⚔ Churchland</h1>
+<div id="output"></div>
+<div id="prompt-text"></div>
+<div id="input-row">
+  <input type="text" id="user-input" autocomplete="off" />
+  <button onclick="submit()">Enter</button>
+</div>
+
+<script>
+  var out = document.getElementById('output');
+  var inp = document.getElementById('user-input');
+  var promptText = document.getElementById('prompt-text');
+  var step = 0;
+
+  function print(text) {
+    out.textContent += text + '\n';
+  }
+
+  function ask(question) {
+    promptText.textContent = question;
+    inp.value = '';
+    inp.focus();
+  }
+
+  function submit() {
+    var val = inp.value.trim().toLowerCase();
+    if (!val) return;
+    print('> ' + inp.value.trim());
+    inp.value = '';
+    promptText.textContent = '';
+    handle(val);
+  }
+
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') submit();
+  });
+
+  function handle(val) {
+    if (step === 0) {
+      if (val === 'left') {
+        print('You are about to enter the church!\n');
+        step = 1;
+        ask('What door are you going through? (backdoor / entrance door)');
+      } else {
+        print('You fall into a hole. Game Over!');
+        endGame();
+      }
+    } else if (step === 1) {
+      if (val === 'entrance' || val === 'entrance door') {
+        print('You entered the church successfully! Now then...\n');
+        print('As a warrior, you have a myriad of weapons. Which one are you using?');
+        print('- Axe\n- Lightsaber\n- Chainsaw\n- Traditional sword\n');
+        step = 2;
+        ask('Type wisely:');
+      } else {
+        print('You were eaten by the dragon! Game Over!');
+        endGame();
+      }
+    } else if (step === 2) {
+      if (val === 'axe') {
+        print('You were burned by a spitball from the dragon! Game Over!');
+      } else if (val === 'lightsaber') {
+        print('You win the fight as a Jedi warrior! Congratulations!');
+      } else if (val === 'sword' || val === 'traditional sword') {
+        print('You accidentally kill the held captive princess! Game Over!');
+      } else if (val === 'chainsaw') {
+        print('You were beaten to death by the dragon. Game Over!');
+      } else {
+        print("You didn't choose any right weapon so you lose instantly. Game Over!");
+      }
+      endGame();
+    }
+  }
+
+  function endGame() {
+    step = -1;
+    print('\n--- Type "restart" to play again ---');
+    ask('');
+    step = 99;
+  }
+
+  // start
+  print(`
+                                         +
+                                         A
+                                      __/_\\__
+                                     \\-'o'-/\\
+                                    _||:<_>:||_
+                                  /\\_/=====\\_/\\
+                                  _|:_:_[I]_:_:|_
+                               _/:::::::::::::::::\\_
+                             _/:::::::::::::::::::::\\_
+                            /::::::::::::::::::::::::\\
+
+Welcome to Churchland.
+Your mission is to find a way to destroy the dragon!
+`);
+  step = 0;
+  ask('Type left or right to proceed:');
+
+  // handle restart
+  var origHandle = handle;
+  handle = function(val) {
+    if (step === 99 && val === 'restart') {
+      out.textContent = '';
+      step = 0;
+      print(`Welcome to Churchland.\nYour mission is to find a way to destroy the dragon!\n`);
+      ask('Type left or right to proceed:');
+      return;
+    }
+    origHandle(val);
+  };
+</script>
 </body>
 </html>
