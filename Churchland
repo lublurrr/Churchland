@@ -8,9 +8,6 @@
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 </head>
 <body>
-
-    <h1>Type some Python code or see the output below:</h1>
-    
     <script type="py" async>
 from pyscript import input
 
