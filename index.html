@@ -3,15 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Python on GH Pages</title>
+    <title>Churchland</title>
     <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
     <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
 </head>
 <body>
-
-    <h1>Type some Python code or see the output below:</h1>
-    
-    <py-script>
+    <py-script worker>
 print(r'''
                                              +
                                              A
@@ -25,13 +22,13 @@ print(r'''
                                 /::::::::::::::::::::::::\
 ''')
 print("Welcome to Churchland.")
-print("Your mission is to find find a way to destroy the dragon!")
-direction = input("Press type left or right to proceed: ").lower()
+print("Your mission is to find a way to destroy the dragon!")
+direction = input("Type left or right to proceed: ").lower()
 if direction == "left":
     print("You are about to enter the church!\n")
     door = input("What door are you going through? Type backdoor or entrance door: ").lower()
     if door == "entrance" or door == "entrance door":
-        print("You go entered the church successfully! Now then...\n")
+        print("You entered the church successfully! Now then...\n")
         print("As a warrior, you have a myriad of weapons. Which one are you using?\n")
         print("- Axe\n- Lightsaber\n- Chainsaw\n- Traditional sword")
         weapon = input("Type wisely: ").lower()
@@ -44,12 +41,11 @@ if direction == "left":
         elif weapon == "chainsaw":
             print("You were beaten to death by the dragon. Game Over!")
         else:
-            print("You didn't choose any right weapon so you lose instantly the fight. Game Over!")
+            print("You didn't choose any right weapon so you lose instantly. Game Over!")
     else:
         print("You were eaten by the dragon! Game Over!")
 else:
     print("You fall into a hole. Game Over!")
     </py-script>
-
 </body>
 </html>
